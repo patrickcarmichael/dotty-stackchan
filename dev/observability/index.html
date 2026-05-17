@@ -2434,9 +2434,9 @@ failure rate, and a Kid Mode single-stat toggle.</p>
 <td>Live ACP child sessions. The bridge is single-child so this is normally 0 (idle) or 1 (in flight).</td>
 </tr>
 <tr>
-<td><code>dotty_calendar_fetch_failures_total</code></td>
+<td><code>dotty_calendar_fetch_failures_total{kind}</code></td>
 <td>Counter</td>
-<td>Google Calendar fetch errors. The cache backs off automatically; sustained failures mean look at the bridge log.</td>
+<td>Google Calendar fetch errors partitioned by <code>kind</code> (<code>timeout</code>, <code>parse</code>, <code>other</code>, <code>orchestrator</code>). The cache backs off automatically; sustained failures mean look at the bridge log. A spike of <code>timeout</code> reads as a network/quota issue; <code>parse</code> usually means the upstream <code>gws</code> CLI changed shape.</td>
 </tr>
 <tr>
 <td><code>dotty_smart_mode_invocations_total</code></td>
@@ -2464,7 +2464,7 @@ home-deployed robot:</p>
 <li><strong>Sustained error rate.</strong>
   <code>sum by (endpoint, kind) (rate(dotty_request_errors_total[5m])) &gt; 0.05</code></li>
 <li><strong>Calendar fetch flatlined failing.</strong>
-  <code>rate(dotty_calendar_fetch_failures_total[15m]) &gt; 0.005</code> for 30 m.</li>
+  <code>sum(rate(dotty_calendar_fetch_failures_total[15m])) &gt; 0.005</code> for 30 m.</li>
 <li><strong>Bridge target down.</strong>
   <code>up{job="dotty-bridge"} == 0</code> for 5 m. Catches the case where
   systemd / Docker hasn't restarted the bridge.</li>
