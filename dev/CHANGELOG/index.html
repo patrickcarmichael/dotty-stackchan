@@ -2144,7 +2144,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[Unreleased]">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-v010-2026-05-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [server-v0.1.0] - 2026-05-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[server-v0.1.0] - 2026-05-17">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2285,15 +2296,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#010-2026-04-25" class="md-nav__link">
+  <a href="#010-2026-04-25-pre-tag-internal-milestone-superseded-by-server-v010" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [0.1.0] - 2026-04-25
+        [0.1.0] - 2026-04-25 (pre-tag internal milestone — superseded by server-v0.1.0)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[0.1.0] - 2026-04-25">
+    <nav class="md-nav" aria-label="[0.1.0] - 2026-04-25 (pre-tag internal milestone — superseded by server-v0.1.0)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2399,7 +2410,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[Unreleased]">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-v010-2026-05-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [server-v0.1.0] - 2026-05-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[server-v0.1.0] - 2026-05-17">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2540,15 +2562,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#010-2026-04-25" class="md-nav__link">
+  <a href="#010-2026-04-25-pre-tag-internal-milestone-superseded-by-server-v010" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [0.1.0] - 2026-04-25
+        [0.1.0] - 2026-04-25 (pre-tag internal milestone — superseded by server-v0.1.0)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[0.1.0] - 2026-04-25">
+    <nav class="md-nav" aria-label="[0.1.0] - 2026-04-25 (pre-tag internal milestone — superseded by server-v0.1.0)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2635,7 +2657,9 @@
 <p>All notable changes to this project will be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>. From v0.1.0 forward this project follows <a href="https://semver.org/">Semantic Versioning</a>. Server and firmware tag independently as <code>server-vX.Y.Z</code> and <code>fw-vX.Y.Z</code>; see <code>COMPATIBILITY.md</code> for the matrix.</p>
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
-<p>Post-v0.1 work — code shipped to <code>main</code> but not yet deployed live or tagged.</p>
+<p><em>Nothing yet — <code>server-v0.1.0</code> was tagged on 2026-05-17.</em></p>
+<h2 id="server-v010-2026-05-17">[server-v0.1.0] - 2026-05-17<a class="headerlink" href="#server-v010-2026-05-17" title="Permanent link">&para;</a></h2>
+<p>First git-tagged public release. Covers all server + firmware work shipped to <code>main</code> between project inception and 2026-05-17. The earlier <code>[0.1.0] - 2026-04-25</code> entry below describes a pre-tag internal milestone — retained for historical reference, but <code>server-v0.1.0</code> is the canonical first release.</p>
 <h3 id="added-server-2026-04-26-2026-05-15">Added — server (2026-04-26 → 2026-05-15)<a class="headerlink" href="#added-server-2026-04-26-2026-05-15" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Two-tier voice path: <code>Tier1Slim</code> LLM provider</strong> (<code>b73f583</code>, <code>custom-providers/tier1_slim/tier1_slim.py</code>) — slim inner-loop LLM in xiaozhi-server that runs a small/fast model (default <code>qwen3.5:4b</code> against llama-swap) for chitchat and escalates tool calls to the bridge via <code>POST /api/voice/escalate</code>. Tools: <code>memory_lookup</code>, <code>think_hard</code>, <code>take_photo</code>, <code>play_song</code>. Cuts plain-chat latency well below 1 s; reserves the heavy ZeroClaw / cloud path for tools that genuinely need it. <code>set_runtime()</code> allows hot-swapping model/url/api_key in flight (no daemon restart) — used by smart-mode flips.</li>
@@ -2733,8 +2757,8 @@
 <li>Camera <code>VIDIOC_STREAMOFF</code> peripheral-off when face-detect is paused (closes the Layer 1 privacy LED hole noted in <code>eb595f2</code>). <strong>Status 2026-05-15: superseded by <code>ac51662</code> privacy-sleep camera disable</strong> — the broader privacy posture now covers this hole at sleep entry, though pause-aware streamoff is still a finer-grained want.</li>
 <li>Reproducible firmware builds — IDF Dockerfile SHA256 pin + <code>dependencies.lock</code> + <code>make verify-firmware</code> target.</li>
 </ul>
-<h2 id="010-2026-04-25">[0.1.0] - 2026-04-25<a class="headerlink" href="#010-2026-04-25" title="Permanent link">&para;</a></h2>
-<p>First tagged release — early-feedback alpha. Works end-to-end on the maintainer's hardware (M5Stack StackChan + Docker host + ZeroClaw host + ZeroClaw + OpenRouter Mistral Small 3.2). External users welcome; see <code>ROADMAP.md</code> for known issues.</p>
+<h2 id="010-2026-04-25-pre-tag-internal-milestone-superseded-by-server-v010">[0.1.0] - 2026-04-25 (pre-tag internal milestone — superseded by server-v0.1.0)<a class="headerlink" href="#010-2026-04-25-pre-tag-internal-milestone-superseded-by-server-v010" title="Permanent link">&para;</a></h2>
+<p>Originally written as a release entry, but never actually tagged. Retained here as a snapshot of what shipped by 2026-04-25; the full v0.1 surface is in the <code>[server-v0.1.0]</code> entry above. Works end-to-end on the maintainer's hardware (M5Stack StackChan + Docker host + ZeroClaw host + ZeroClaw + OpenRouter Mistral Small 3.2). External users welcome; see <code>ROADMAP.md</code> for known issues.</p>
 <h3 id="fixed-in-v010">Fixed in v0.1.0<a class="headerlink" href="#fixed-in-v010" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Smart Mode marker check.</strong> <code>zeroclaw.py</code> <code>_payload</code> was matching <code>[SMART_MODE]\n</code> against the composed <code>[Context] … [User] …</code> payload (marker landed at offset ~2700, so <code>startswith</code> was always False). Every voice "smart mode" turn since <code>434988d</code> silently fell back to the default voice model. Fix detects markers on the raw user message before <code>_compose()</code> wraps it.</li>
