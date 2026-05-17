@@ -10,27 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://brettkinny.github.io/dotty-stackchan/dev/advanced/multi-host/">
+        <link rel="canonical" href="https://brettkinny.github.io/dotty-stackchan/dev/SECURITY/">
       
       
+        <link rel="prev" href="../CONTRIBUTING/">
+      
+      
+        <link rel="next" href="../COMPATIBILITY/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/dotty-hero.svg">
+      <link rel="icon" href="../assets/dotty-hero.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Multi-host deployment (Docker host + ZeroClaw host) - Dotty</title>
+        <title>Security - Dotty</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#multi-host-deployment-docker-host-zeroclaw-host" class="md-skip">
+        <a href="#security-policy" class="md-skip">
           Skip to content
         </a>
       
@@ -92,9 +96,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Dotty" class="md-header__button md-logo" aria-label="Dotty" data-md-component="logo">
+    <a href=".." title="Dotty" class="md-header__button md-logo" aria-label="Dotty" data-md-component="logo">
       
-  <img src="../../assets/dotty-hero.svg" alt="logo">
+  <img src="../assets/dotty-hero.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -111,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Multi-host deployment (Docker host + ZeroClaw host)
+              Security
             
           </span>
         </div>
@@ -224,7 +228,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -243,7 +247,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../SETUP/" class="md-tabs__link">
+      <a href="../SETUP/" class="md-tabs__link">
         
   
   
@@ -262,7 +266,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/architecture.md" class="md-tabs__link">
+      <a href="../docs/architecture.md" class="md-tabs__link">
         
   
   
@@ -283,7 +287,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../docs/hardware.md" class="md-tabs__link">
+        <a href="../docs/hardware.md" class="md-tabs__link">
           
   
   
@@ -301,7 +305,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/voice-pipeline.md" class="md-tabs__link">
+      <a href="../docs/voice-pipeline.md" class="md-tabs__link">
         
   
   
@@ -320,7 +324,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/voice-mode-entry.md" class="md-tabs__link">
+      <a href="../docs/voice-mode-entry.md" class="md-tabs__link">
         
   
   
@@ -339,7 +343,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/voice-catalog.md" class="md-tabs__link">
+      <a href="../docs/voice-catalog.md" class="md-tabs__link">
         
   
   
@@ -358,7 +362,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/brain.md" class="md-tabs__link">
+      <a href="../docs/brain.md" class="md-tabs__link">
         
   
   
@@ -377,7 +381,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/protocols.md" class="md-tabs__link">
+      <a href="../docs/protocols.md" class="md-tabs__link">
         
   
   
@@ -396,7 +400,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/ota-verification.md" class="md-tabs__link">
+      <a href="../docs/ota-verification.md" class="md-tabs__link">
         
   
   
@@ -415,7 +419,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/kid-mode.md" class="md-tabs__link">
+      <a href="../docs/kid-mode.md" class="md-tabs__link">
         
   
   
@@ -434,7 +438,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/llm-backends.md" class="md-tabs__link">
+      <a href="../docs/llm-backends.md" class="md-tabs__link">
         
   
   
@@ -453,7 +457,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/observability.md" class="md-tabs__link">
+      <a href="../docs/observability.md" class="md-tabs__link">
         
   
   
@@ -474,7 +478,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../docs/cookbook/change-persona.md" class="md-tabs__link">
+        <a href="../docs/cookbook/change-persona.md" class="md-tabs__link">
           
   
   
@@ -494,7 +498,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../docs/advanced/multi-host.md" class="md-tabs__link">
+        <a href="../docs/advanced/multi-host.md" class="md-tabs__link">
           
   
   
@@ -514,7 +518,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../docs/emoji-mapping.md" class="md-tabs__link">
+        <a href="../docs/emoji-mapping.md" class="md-tabs__link">
           
   
   
@@ -532,7 +536,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/troubleshooting.md" class="md-tabs__link">
+      <a href="../docs/troubleshooting.md" class="md-tabs__link">
         
   
   
@@ -551,7 +555,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/faq.md" class="md-tabs__link">
+      <a href="../docs/faq.md" class="md-tabs__link">
         
   
   
@@ -570,7 +574,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/about.md" class="md-tabs__link">
+      <a href="../docs/about.md" class="md-tabs__link">
         
   
   
@@ -589,7 +593,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../ROADMAP/" class="md-tabs__link">
+      <a href="../ROADMAP/" class="md-tabs__link">
         
   
   
@@ -608,7 +612,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../CONTRIBUTING/" class="md-tabs__link">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
         
   
   
@@ -627,7 +631,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/style.md" class="md-tabs__link">
+      <a href="../docs/style.md" class="md-tabs__link">
         
   
   
@@ -644,9 +648,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../../SECURITY/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -665,7 +671,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../COMPATIBILITY/" class="md-tabs__link">
+      <a href="../COMPATIBILITY/" class="md-tabs__link">
         
   
   
@@ -684,7 +690,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/sbom.md" class="md-tabs__link">
+      <a href="../docs/sbom.md" class="md-tabs__link">
         
   
   
@@ -703,7 +709,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/signed-releases.md" class="md-tabs__link">
+      <a href="../docs/signed-releases.md" class="md-tabs__link">
         
   
   
@@ -722,7 +728,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/reproducible-builds.md" class="md-tabs__link">
+      <a href="../docs/reproducible-builds.md" class="md-tabs__link">
         
   
   
@@ -741,7 +747,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../docs/versioning.md" class="md-tabs__link">
+      <a href="../docs/versioning.md" class="md-tabs__link">
         
   
   
@@ -760,7 +766,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../CHANGELOG/" class="md-tabs__link">
+      <a href="../CHANGELOG/" class="md-tabs__link">
         
   
   
@@ -795,9 +801,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Dotty" class="md-nav__button md-logo" aria-label="Dotty" data-md-component="logo">
+    <a href=".." title="Dotty" class="md-nav__button md-logo" aria-label="Dotty" data-md-component="logo">
       
-  <img src="../../assets/dotty-hero.svg" alt="logo">
+  <img src="../assets/dotty-hero.svg" alt="logo">
 
     </a>
     Dotty
@@ -824,7 +830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -851,7 +857,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../SETUP/" class="md-nav__link">
+      <a href="../SETUP/" class="md-nav__link">
         
   
   
@@ -878,7 +884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/architecture.md" class="md-nav__link">
+      <a href="../docs/architecture.md" class="md-nav__link">
         
   
   
@@ -957,7 +963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/hardware.md" class="md-nav__link">
+      <a href="../docs/hardware.md" class="md-nav__link">
         
   
   
@@ -985,7 +991,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/hardware-support.md" class="md-nav__link">
+      <a href="../docs/hardware-support.md" class="md-nav__link">
         
   
   
@@ -1020,7 +1026,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/voice-pipeline.md" class="md-nav__link">
+      <a href="../docs/voice-pipeline.md" class="md-nav__link">
         
   
   
@@ -1047,7 +1053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/voice-mode-entry.md" class="md-nav__link">
+      <a href="../docs/voice-mode-entry.md" class="md-nav__link">
         
   
   
@@ -1074,7 +1080,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/voice-catalog.md" class="md-nav__link">
+      <a href="../docs/voice-catalog.md" class="md-nav__link">
         
   
   
@@ -1101,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/brain.md" class="md-nav__link">
+      <a href="../docs/brain.md" class="md-nav__link">
         
   
   
@@ -1128,7 +1134,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/protocols.md" class="md-nav__link">
+      <a href="../docs/protocols.md" class="md-nav__link">
         
   
   
@@ -1155,7 +1161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/ota-verification.md" class="md-nav__link">
+      <a href="../docs/ota-verification.md" class="md-nav__link">
         
   
   
@@ -1182,7 +1188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/kid-mode.md" class="md-nav__link">
+      <a href="../docs/kid-mode.md" class="md-nav__link">
         
   
   
@@ -1209,7 +1215,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/llm-backends.md" class="md-nav__link">
+      <a href="../docs/llm-backends.md" class="md-nav__link">
         
   
   
@@ -1236,7 +1242,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/observability.md" class="md-nav__link">
+      <a href="../docs/observability.md" class="md-nav__link">
         
   
   
@@ -1315,7 +1321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/cookbook/change-persona.md" class="md-nav__link">
+      <a href="../docs/cookbook/change-persona.md" class="md-nav__link">
         
   
   
@@ -1343,7 +1349,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/cookbook/swap-voice.md" class="md-nav__link">
+      <a href="../docs/cookbook/swap-voice.md" class="md-nav__link">
         
   
   
@@ -1371,7 +1377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/cookbook/run-fully-local.md" class="md-nav__link">
+      <a href="../docs/cookbook/run-fully-local.md" class="md-nav__link">
         
   
   
@@ -1399,7 +1405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/cookbook/add-emoji.md" class="md-nav__link">
+      <a href="../docs/cookbook/add-emoji.md" class="md-nav__link">
         
   
   
@@ -1427,7 +1433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/cookbook/disable-kid-mode.md" class="md-nav__link">
+      <a href="../docs/cookbook/disable-kid-mode.md" class="md-nav__link">
         
   
   
@@ -1514,7 +1520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/advanced/multi-host.md" class="md-nav__link">
+      <a href="../docs/advanced/multi-host.md" class="md-nav__link">
         
   
   
@@ -1542,7 +1548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/advanced/variant-port-guide.md" class="md-nav__link">
+      <a href="../docs/advanced/variant-port-guide.md" class="md-nav__link">
         
   
   
@@ -1629,7 +1635,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/emoji-mapping.md" class="md-nav__link">
+      <a href="../docs/emoji-mapping.md" class="md-nav__link">
         
   
   
@@ -1657,7 +1663,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/interaction-map.md" class="md-nav__link">
+      <a href="../docs/interaction-map.md" class="md-nav__link">
         
   
   
@@ -1685,7 +1691,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/latent-capabilities.md" class="md-nav__link">
+      <a href="../docs/latent-capabilities.md" class="md-nav__link">
         
   
   
@@ -1713,7 +1719,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/references.md" class="md-nav__link">
+      <a href="../docs/references.md" class="md-nav__link">
         
   
   
@@ -1748,7 +1754,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/troubleshooting.md" class="md-nav__link">
+      <a href="../docs/troubleshooting.md" class="md-nav__link">
         
   
   
@@ -1775,7 +1781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/faq.md" class="md-nav__link">
+      <a href="../docs/faq.md" class="md-nav__link">
         
   
   
@@ -1802,7 +1808,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/about.md" class="md-nav__link">
+      <a href="../docs/about.md" class="md-nav__link">
         
   
   
@@ -1829,7 +1835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../ROADMAP/" class="md-nav__link">
+      <a href="../ROADMAP/" class="md-nav__link">
         
   
   
@@ -1856,7 +1862,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../CONTRIBUTING/" class="md-nav__link">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
         
   
   
@@ -1883,7 +1889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/style.md" class="md-nav__link">
+      <a href="../docs/style.md" class="md-nav__link">
         
   
   
@@ -1907,10 +1913,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../SECURITY/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1926,6 +1959,120 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#threat-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-in-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is in scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is out of scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting-a-vulnerability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting a vulnerability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reporting a vulnerability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-include" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to include
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-expect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to expect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disclosure-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disclosure policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1937,7 +2084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../COMPATIBILITY/" class="md-nav__link">
+      <a href="../COMPATIBILITY/" class="md-nav__link">
         
   
   
@@ -1964,7 +2111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/sbom.md" class="md-nav__link">
+      <a href="../docs/sbom.md" class="md-nav__link">
         
   
   
@@ -1991,7 +2138,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/signed-releases.md" class="md-nav__link">
+      <a href="../docs/signed-releases.md" class="md-nav__link">
         
   
   
@@ -2018,7 +2165,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/reproducible-builds.md" class="md-nav__link">
+      <a href="../docs/reproducible-builds.md" class="md-nav__link">
         
   
   
@@ -2045,7 +2192,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../docs/versioning.md" class="md-nav__link">
+      <a href="../docs/versioning.md" class="md-nav__link">
         
   
   
@@ -2072,7 +2219,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../CHANGELOG/" class="md-nav__link">
+      <a href="../CHANGELOG/" class="md-nav__link">
         
   
   
@@ -2119,10 +2266,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#when-youd-want-this" class="md-nav__link">
+  <a href="#threat-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When you'd want this
+        Threat model
       
     </span>
   </a>
@@ -2130,10 +2277,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-differs-from-all-in-one" class="md-nav__link">
+  <a href="#what-is-in-scope" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it differs from all-in-one
+        What is in scope
       
     </span>
   </a>
@@ -2141,10 +2288,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
+  <a href="#what-is-out-of-scope" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Setup
+        What is out of scope
       
     </span>
   </a>
@@ -2152,10 +2299,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#migrating-from-all-in-one-to-multi-host" class="md-nav__link">
+  <a href="#reporting-a-vulnerability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Migrating from all-in-one to multi-host
+        Reporting a vulnerability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reporting a vulnerability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-include" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to include
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-expect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to expect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported versions
       
     </span>
   </a>
@@ -2163,10 +2349,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reference" class="md-nav__link">
+  <a href="#disclosure-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reference
+        Disclosure policy
       
     </span>
   </a>
@@ -2193,89 +2379,91 @@
   
 
 
-<h1 id="multi-host-deployment-docker-host-zeroclaw-host">Multi-host deployment (Docker host + ZeroClaw host)<a class="headerlink" href="#multi-host-deployment-docker-host-zeroclaw-host" title="Permanent link">&para;</a></h1>
-<p>The default setup in <code>compose.all-in-one.yml</code> runs everything on one Docker host. This document describes the <strong>multi-host</strong> split: xiaozhi-server on a Linux Docker host and ZeroClaw + the bridge on a separate ZeroClaw host.</p>
-<h2 id="when-youd-want-this">When you'd want this<a class="headerlink" href="#when-youd-want-this" title="Permanent link">&para;</a></h2>
+<h1 id="security-policy">Security Policy<a class="headerlink" href="#security-policy" title="Permanent link">&para;</a></h1>
+<h2 id="threat-model">Threat model<a class="headerlink" href="#threat-model" title="Permanent link">&para;</a></h2>
+<p>This project is infrastructure for an <strong>always-on voice assistant</strong> (StackChan).
+The device sits on a desk, listens via a hot mic, and speaks aloud. It ships
+with Kid Mode enabled by default (an optional child-safe personality mode), but
+the base system is a general-purpose assistant. The always-on microphone and
+unauthenticated LAN endpoints make the threat model more sensitive than a
+typical hobby project; when Kid Mode is active the threat model escalates
+further because children become the audience:</p>
 <ul>
-<li><strong>Dedicated hardware for the brain.</strong> ZeroClaw runs as a native binary (Rust, not containerized). If you already have a Pi running ZeroClaw for other channels (chat, CLI, other agents), keeping the bridge there avoids duplicating the install.</li>
-<li><strong>Resource isolation.</strong> The voice pipeline (ASR model loading, TTS) and the LLM bridge have different resource profiles. Splitting them across hosts avoids contention.</li>
-<li><strong>Docker host already in use.</strong> If you already run a Linux Docker host (NAS, home-server, mini-PC) and don't want to install Rust/ZeroClaw tooling on it, the Pi is a natural home for the bridge.</li>
+<li><strong>Voice pipeline exposure:</strong> ASR transcripts, LLM prompts, and TTS audio
+  traverse the LAN between the device, the Docker host, and the ZeroClaw host. An
+  attacker on the LAN could intercept or inject traffic.</li>
+<li><strong>Kid Mode safety:</strong> When Kid Mode is active, children are the intended
+  audience. Prompt injection or jailbreaks that bypass the content-safety
+  enforcement layer could expose a child to harmful content.</li>
+<li><strong>Always-on microphone:</strong> The device captures ambient audio. Compromise of
+  the voice pipeline could leak private conversations.</li>
+<li><strong>No authentication on internal endpoints:</strong> The bridge (<code>/api/message</code>)
+  and xiaozhi-server endpoints are unauthenticated by design (LAN-only
+  deployment assumption). Exposing them to the internet without additional
+  controls is a vulnerability.</li>
 </ul>
-<h2 id="how-it-differs-from-all-in-one">How it differs from all-in-one<a class="headerlink" href="#how-it-differs-from-all-in-one" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>All-in-one</th>
-<th>Multi-host</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Compose file</td>
-<td><code>compose.all-in-one.yml</code></td>
-<td><code>docker-compose.yml</code> (xiaozhi only)</td>
-</tr>
-<tr>
-<td>Bridge runs as</td>
-<td>Docker container</td>
-<td>systemd service on the Pi</td>
-</tr>
-<tr>
-<td>LLM URL in <code>.config.yaml</code></td>
-<td><code>http://bridge:8080/api/message/stream</code> (Docker network)</td>
-<td><code>http://&lt;ZEROCLAW_HOST&gt;:8080/api/message/stream</code> (real LAN IP)</td>
-</tr>
-<tr>
-<td>ZeroClaw install</td>
-<td>On the Docker host, bind-mounted into the bridge container</td>
-<td>Native on the Pi (<code>cargo install zeroclaw</code>)</td>
-</tr>
-<tr>
-<td>Network</td>
-<td>Docker bridge network between services</td>
-<td>LAN — xiaozhi-server reaches the Pi over WiFi/Ethernet</td>
-</tr>
-</tbody>
-</table>
-<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
-<p>The main <a href="../../README.md">README</a> already documents this layout in detail. The short version:</p>
-<ol>
-<li><strong>Docker host:</strong></li>
-<li>Clone this repo to <code>&lt;XIAOZHI_PATH&gt;</code>.</li>
-<li>Edit <code>data/.config.yaml</code>: set <code>LLM.ZeroClawLLM.url</code> to <code>http://&lt;ZEROCLAW_HOST&gt;:8080/api/message/stream</code>.</li>
-<li>
-<p>Run <code>docker compose up -d</code> (uses the standard <code>docker-compose.yml</code>).</p>
-</li>
-<li>
-<p><strong>ZeroClaw host:</strong></p>
-</li>
-<li>Install ZeroClaw: <code>cargo install zeroclaw</code> (see <a href="https://github.com/zeroclaw-labs/zeroclaw">zeroclaw-labs/zeroclaw</a>).</li>
-<li>Configure the agent: edit <code>~/.zeroclaw/config.toml</code> with your LLM provider, API keys, and persona.</li>
-<li>Copy <code>bridge.py</code> and <code>bridge/requirements.txt</code> to <code>&lt;BRIDGE_PATH&gt;</code>.</li>
-<li>Create a venv and install deps: <code>python3 -m venv .venv &amp;&amp; .venv/bin/pip install -r requirements.txt</code>.</li>
-<li>
-<p>Install the systemd unit: copy <code>zeroclaw-bridge.service</code> to <code>/etc/systemd/system/</code>, edit paths, then <code>systemctl enable --now zeroclaw-bridge</code>.</p>
-</li>
-<li>
-<p><strong>StackChan device:</strong></p>
-</li>
-<li>Set OTA URL to <code>http://&lt;XIAOZHI_HOST&gt;:8003/xiaozhi/ota/</code>.</li>
-</ol>
-<h2 id="migrating-from-all-in-one-to-multi-host">Migrating from all-in-one to multi-host<a class="headerlink" href="#migrating-from-all-in-one-to-multi-host" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Stop the all-in-one stack: <code>docker compose -f compose.all-in-one.yml down</code>.</li>
-<li>Edit <code>data/.config.yaml</code>: change the LLM URL from <code>http://bridge:8080/...</code> to <code>http://&lt;ZEROCLAW_HOST&gt;:8080/...</code>.</li>
-<li>Set up the Pi as described above.</li>
-<li>Start xiaozhi-server alone: <code>docker compose up -d</code> (standard <code>docker-compose.yml</code>).</li>
-</ol>
-<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
+<h2 id="what-is-in-scope">What is in scope<a class="headerlink" href="#what-is-in-scope" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Full architecture diagram: <a href="../../README.md#high-level-architecture">README.md</a></li>
-<li>Endpoint table: <a href="../../README.md#endpoints">README.md</a></li>
-<li>Bridge internals: <a href="../../protocols/">docs/protocols.md</a> (ACP JSON-RPC section)</li>
-<li>Troubleshooting: <a href="../../README.md#troubleshooting">README.md</a></li>
+<li>The FastAPI bridge (<code>bridge.py</code>) and its ACP session handling</li>
+<li>Custom xiaozhi-server providers (<code>zeroclaw.py</code>, <code>edge_stream.py</code>,
+  <code>fun_local.py</code>, <code>piper_local.py</code>)</li>
+<li>Docker Compose configuration and container security</li>
+<li>Content-safety prompt enforcement (prompt sandwich, emoji prefix enforcement,
+  Kid Mode filtering)</li>
+<li>The bridge Docker image and its CI pipeline</li>
+<li>Documentation that could lead to insecure deployments if followed as-is</li>
 </ul>
+<h2 id="what-is-out-of-scope">What is out of scope<a class="headerlink" href="#what-is-out-of-scope" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Upstream xiaozhi-esp32-server vulnerabilities (report to
+  <a href="https://github.com/xinnan-tech/xiaozhi-esp32-server">xinnan-tech/xiaozhi-esp32-server</a>)</li>
+<li>Upstream ZeroClaw vulnerabilities (report to
+  <a href="https://github.com/zeroclaw-labs/zeroclaw">zeroclaw-labs/zeroclaw</a>)</li>
+<li>Upstream M5Stack StackChan firmware vulnerabilities (report to
+  <a href="https://github.com/m5stack/StackChan">m5stack/StackChan</a>)</li>
+<li>LLM model behavior that is not caused by this project's prompts or code</li>
+</ul>
+<h2 id="reporting-a-vulnerability">Reporting a vulnerability<a class="headerlink" href="#reporting-a-vulnerability" title="Permanent link">&para;</a></h2>
+<p><strong>Please do not open a public GitHub issue for security vulnerabilities.</strong></p>
+<p>Instead, use one of these channels:</p>
+<ol>
+<li>
+<p><strong>GitHub private vulnerability reporting:</strong>
+   Use the "Report a vulnerability" button on the
+   <a href="../../security/advisories/new">Security tab</a> of this repository. This
+   creates a private advisory visible only to maintainers.</p>
+</li>
+<li>
+<p><strong>Email:</strong>
+   Send details to <strong>brett@squarewavesystems.com.au</strong>. If you would like to
+   encrypt your report, ask for a PGP key in a preliminary email.</p>
+</li>
+</ol>
+<h3 id="what-to-include">What to include<a class="headerlink" href="#what-to-include" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Description of the vulnerability</li>
+<li>Steps to reproduce (or a proof of concept)</li>
+<li>Affected component(s) and file(s)</li>
+<li>Potential impact, especially if it relates to Kid Mode safety or audio privacy</li>
+</ul>
+<h3 id="what-to-expect">What to expect<a class="headerlink" href="#what-to-expect" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Acknowledgment</strong> within 72 hours of your report.</li>
+<li><strong>Initial assessment</strong> within 7 days — whether it is accepted, needs more
+  information, or is out of scope.</li>
+<li><strong>Fix or mitigation</strong> timeline communicated once the issue is confirmed.
+  For Kid Mode safety issues, expect an accelerated response.</li>
+<li><strong>Credit</strong> in the fix commit and changelog (unless you prefer to remain
+  anonymous).</li>
+</ul>
+<h2 id="supported-versions">Supported versions<a class="headerlink" href="#supported-versions" title="Permanent link">&para;</a></h2>
+<p>This project does not have formal releases yet. Security fixes will be applied
+to the <code>main</code> branch. There are no backport branches.</p>
+<h2 id="disclosure-policy">Disclosure policy<a class="headerlink" href="#disclosure-policy" title="Permanent link">&para;</a></h2>
+<p>We follow coordinated disclosure. Once a fix is merged and deployed, the
+vulnerability details will be made public (via GitHub advisory or changelog
+entry). We ask reporters to allow up to 90 days before public disclosure,
+though we aim to resolve issues much faster than that.</p>
 
 
 
@@ -2331,10 +2519,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
