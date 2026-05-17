@@ -2174,10 +2174,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-connect-the-robot" class="md-nav__link">
+  <a href="#5-install-the-bridge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Connect the robot
+        5. Install the bridge
       
     </span>
   </a>
@@ -2185,10 +2185,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-first-voice-turn" class="md-nav__link">
+  <a href="#6-connect-the-robot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. First voice turn
+        6. Connect the robot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-first-voice-turn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. First voice turn
       
     </span>
   </a>
@@ -2419,14 +2430,24 @@ container.</p>
 </code></pre></div>
 <p>All checks should pass (green). If any fail, see
 <a href="../troubleshooting/">troubleshooting.md</a>.</p>
-<h2 id="5-connect-the-robot">5. Connect the robot<a class="headerlink" href="#5-connect-the-robot" title="Permanent link">&para;</a></h2>
+<h2 id="5-install-the-bridge">5. Install the bridge<a class="headerlink" href="#5-install-the-bridge" title="Permanent link">&para;</a></h2>
+<p>This step depends on which deployment shape you picked (see the table in the <a href="../README.md#get-it-running">README</a>).</p>
+<p><strong>Single-host (compose.all-in-one):</strong> the bridge runs as a container in the same compose stack. There is no separate install step — skip to step 6.</p>
+<p><strong>Multi-host (default <code>make setup</code>):</strong> install the bridge natively on the host that will run it. From a checkout of this repo <em>on that host</em> (not the Docker host):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>scripts/install-bridge.sh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--bridge-dir<span class="w"> </span>/root/zeroclaw-bridge<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--zeroclaw-bin<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>which<span class="w"> </span>zeroclaw<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>The script copies <code>bridge.py</code> + the <code>custom-providers/</code> and <code>bridge/</code> trees into the install dir, creates a Python venv, writes a systemd unit, runs an import smoke test, and starts the service. Health check at <code>http://&lt;ZEROCLAW_HOST&gt;:8080/health</code> should return <code>{"status":"ok",...}</code>.</p>
+<p>If the bridge host is a different machine from the Docker host, clone the repo there first.</p>
+<h2 id="6-connect-the-robot">6. Connect the robot<a class="headerlink" href="#6-connect-the-robot" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Power on the robot (USB-C or battery).</li>
 <li>On the device screen, navigate to <strong>Settings &gt; Advanced Options</strong>.</li>
 <li>Enter the OTA URL: <code>http://&lt;YOUR_SERVER_IP&gt;:8003/xiaozhi/ota/</code></li>
 <li>The robot connects via WebSocket and shows a face.</li>
 </ol>
-<h2 id="6-first-voice-turn">6. First voice turn<a class="headerlink" href="#6-first-voice-turn" title="Permanent link">&para;</a></h2>
+<h2 id="7-first-voice-turn">7. First voice turn<a class="headerlink" href="#7-first-voice-turn" title="Permanent link">&para;</a></h2>
 <p>Tap the screen to enter voice mode and say "Hello Dotty!"</p>
 <p>You should see:</p>
 <table>
@@ -2529,7 +2550,7 @@ latency is roughly 5 seconds, dominated by the LLM round-trip.</p>
 <ul>
 <li><code>.config.yaml</code> — replace <code>&lt;XIAOZHI_HOST&gt;</code>, <code>&lt;ZEROCLAW_HOST&gt;</code>, and customise the <code>prompt:</code> block.</li>
 <li><code>docker-compose.yml</code> — set <code>TZ</code> to your timezone.</li>
-<li><code>zeroclaw-bridge.service</code> — adjust paths if the bridge doesn't live at <code>/root/zeroclaw-bridge/</code>.</li>
+<li><code>zeroclaw-bridge.service</code> — only if you're installing the bridge by hand. <code>scripts/install-bridge.sh</code> (see step 5) writes its own copy with the right paths and you shouldn't need to touch this file.</li>
 </ul>
 <hr />
 <h2 id="deployment-layout">Deployment layout<a class="headerlink" href="#deployment-layout" title="Permanent link">&para;</a></h2>
@@ -2676,25 +2697,25 @@ latency is roughly 5 seconds, dominated by the LLM round-trip.</p>
 <p>Caveat: if you run <code>docker compose down</code>, the container is marked stopped and won't come back on reboot. Use <code>docker compose restart</code> or <code>docker restart xiaozhi-esp32-server</code> for transient restarts instead.</p>
 <hr />
 <h2 id="common-operations">Common operations<a class="headerlink" href="#common-operations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Tail xiaozhi-server logs (voice pipeline)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>&lt;XIAOZHI_USER&gt;@&lt;XIAOZHI_HOST&gt;<span class="w"> </span><span class="s1">&#39;docker logs -f xiaozhi-esp32-server&#39;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Tail bridge logs</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ssh<span class="w"> </span>&lt;ZEROCLAW_USER&gt;@&lt;ZEROCLAW_HOST&gt;<span class="w"> </span><span class="s1">&#39;sudo journalctl -u zeroclaw-bridge -f&#39;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Restart voice pipeline after config change</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ssh<span class="w"> </span>&lt;XIAOZHI_USER&gt;@&lt;XIAOZHI_HOST&gt;<span class="w"> </span><span class="s1">&#39;cd &lt;XIAOZHI_PATH&gt; &amp;&amp; docker compose restart&#39;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Restart the bridge</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ssh<span class="w"> </span>&lt;ZEROCLAW_USER&gt;@&lt;ZEROCLAW_HOST&gt;<span class="w"> </span><span class="s1">&#39;sudo systemctl restart zeroclaw-bridge&#39;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Smoke test full round-trip</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://&lt;ZEROCLAW_HOST&gt;:8080/api/message<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;content-type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;content&quot;:&quot;hello&quot;,&quot;channel&quot;:&quot;dotty&quot;}&#39;</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Bridge health</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>curl<span class="w"> </span>http://&lt;ZEROCLAW_HOST&gt;:8080/health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Tail xiaozhi-server logs (voice pipeline)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>&lt;XIAOZHI_USER&gt;@&lt;XIAOZHI_HOST&gt;<span class="w"> </span><span class="s1">&#39;docker logs -f xiaozhi-esp32-server&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Tail bridge logs</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ssh<span class="w"> </span>&lt;ZEROCLAW_USER&gt;@&lt;ZEROCLAW_HOST&gt;<span class="w"> </span><span class="s1">&#39;sudo journalctl -u zeroclaw-bridge -f&#39;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Restart voice pipeline after config change</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ssh<span class="w"> </span>&lt;XIAOZHI_USER&gt;@&lt;XIAOZHI_HOST&gt;<span class="w"> </span><span class="s1">&#39;cd &lt;XIAOZHI_PATH&gt; &amp;&amp; docker compose restart&#39;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Restart the bridge</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ssh<span class="w"> </span>&lt;ZEROCLAW_USER&gt;@&lt;ZEROCLAW_HOST&gt;<span class="w"> </span><span class="s1">&#39;sudo systemctl restart zeroclaw-bridge&#39;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Smoke test full round-trip</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://&lt;ZEROCLAW_HOST&gt;:8080/api/message<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;content-type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;content&quot;:&quot;hello&quot;,&quot;channel&quot;:&quot;dotty&quot;}&#39;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Bridge health</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>curl<span class="w"> </span>http://&lt;ZEROCLAW_HOST&gt;:8080/health
 </code></pre></div>
 <h3 id="changing-voice">Changing voice<a class="headerlink" href="#changing-voice" title="Permanent link">&para;</a></h3>
 <p>The default TTS is <code>LocalPiper</code> (offline, runs inside the container). To change the Piper voice, edit <code>TTS.LocalPiper.voice</code> and the corresponding <code>model_path</code> / <code>config_path</code> in <code>data/.config.yaml</code>. To switch to cloud EdgeTTS instead, set <code>selected_module.TTS: EdgeTTS</code> and edit <code>TTS.EdgeTTS.voice</code> (any Microsoft Edge Neural voice ID works, e.g. <code>en-US-AvaNeural</code>). Restart the container after changes.</p>
@@ -2706,9 +2727,9 @@ latency is roughly 5 seconds, dominated by the LLM round-trip.</p>
 <p>For the <code>Tier1Slim</code> path (default): edit <code>LLM.Tier1Slim.model</code> (or repoint <code>url</code> / <code>api_key</code>) in <code>data/.config.yaml</code> and <code>docker compose restart</code>. Or for in-flight swaps, use the bridge's <code>/admin/smart-mode</code> toggle — it calls <code>/xiaozhi/admin/set-tier1slim-model</code> to hot-swap without a restart (see <a href="../tier1slim/">tier1slim.md</a>). For the legacy <code>ZeroClawLLM</code> path: edit <code>default_model</code> near the top of <code>&lt;ZEROCLAW_CFG&gt;</code> on the ZeroClaw host (provider and encrypted api_key live next to it). ACP mode caches config in the long-running child, so restart the bridge (<code>sudo systemctl restart zeroclaw-bridge</code>) after editing. Confirm with <code>sudo &lt;ZEROCLAW_BIN&gt; status | grep Model</code>.</p>
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>doctor<span class="w">          </span><span class="c1"># health checks</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>make<span class="w"> </span>logs<span class="w">            </span><span class="c1"># tail server logs</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>http://&lt;YOUR_SERVER_IP&gt;:8080/health<span class="w">   </span><span class="c1"># test the bridge</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>make<span class="w"> </span>doctor<span class="w">          </span><span class="c1"># health checks</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>make<span class="w"> </span>logs<span class="w">            </span><span class="c1"># tail server logs</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>curl<span class="w"> </span>http://&lt;YOUR_SERVER_IP&gt;:8080/health<span class="w">   </span><span class="c1"># test the bridge</span>
 </code></pre></div>
 <p>See <a href="../troubleshooting/">troubleshooting.md</a> for common issues.</p>
 
