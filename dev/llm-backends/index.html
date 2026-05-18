@@ -1319,6 +1319,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#anthropic-api-directly-without-openrouter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anthropic API directly (without OpenRouter)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2438,6 +2449,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#anthropic-api-directly-without-openrouter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anthropic API directly (without OpenRouter)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2740,6 +2762,39 @@ and the matching block under <code>LLM:</code> in <code>.config.yaml</code>.</p>
 <li><code>persona_file</code> is loaded as the system prompt.</li>
 <li>No memory between sessions — each request is stateless.</li>
 </ul>
+<h3 id="anthropic-api-directly-without-openrouter">Anthropic API directly (without OpenRouter)<a class="headerlink" href="#anthropic-api-directly-without-openrouter" title="Permanent link">&para;</a></h3>
+<p>Anthropic ships an OpenAI-SDK-compatible shim at <code>https://api.anthropic.com/v1/</code>
+that maps Chat Completions calls onto the underlying Messages API. The
+<code>OpenAICompat</code> provider works against it out of the box:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">selected_module</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">LLM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenAICompat</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">LLM</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">OpenAICompat</span><span class="p">:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai_compat</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://api.anthropic.com/v1</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sk-ant-api03-xxxxxxxxxxxxxxxxxxxx</span><span class="w">     </span><span class="c1"># Anthropic console key</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-haiku-4-5</span><span class="w">                         </span><span class="c1"># or claude-sonnet-4-6, etc.</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">persona_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">personas/default.md</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">max_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+</code></pre></div>
+<p>Caveats when running Anthropic-only (no OpenRouter):</p>
+<ul>
+<li><strong>Vision intents</strong> (<code>take_photo</code>) go through the bridge's <code>_call_vision_api</code>,
+  which reads <code>VLM_API_KEY</code> → <code>VISION_API_KEY</code> → <code>OPENROUTER_API_KEY</code> in turn
+  and defaults to OpenRouter for the upload. Point those env vars at your
+  Anthropic key and set the bridge's VLM model+URL env to Anthropic's
+  endpoint to keep vision working without OpenRouter.</li>
+<li><strong>Smart-mode escalation</strong> defaults to <code>anthropic/claude-sonnet-4-6</code> via
+  OpenRouter — flip <code>SMART_MODEL</code> in <code>zeroclaw-bridge.service</code> to a bare
+  Anthropic model id and <code>VOICE_CLOUD_PROFILE_KEY</code> to
+  <code>custom:https://api.anthropic.com/v1</code> to route smart-mode there too.</li>
+<li>The compat shim doesn't support every OpenAI option (streaming and tools
+  work; <code>logprobs</code>, <code>seed</code>, etc. don't). Tier1Slim's <code>think_hard</code> /
+  <code>memory_lookup</code> tool calls go through the bridge, so they're unaffected.</li>
+</ul>
 <h2 id="2-llama-swap-local-multi-model">2. llama-swap (local, multi-model)<a class="headerlink" href="#2-llama-swap-local-multi-model" title="Permanent link">&para;</a></h2>
 <p><code>OpenAICompat</code> provider pointed at a local llama-swap instance. llama-swap fronts upstream llama.cpp and routes per-model requests to per-alias <code>llama-server</code> children, with declarative co-residency (the <code>voice</code> matrix set keeps <code>qwen3.5:4b</code> and <code>qwen3.6:27b-think</code> both warm) and on-demand swap to other sets (e.g. <code>coding</code> for <code>qwen3.6:27b@96K</code>). Recommended local backend when you want to run more than one model at a time without paying repeated cold-load costs.</p>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
@@ -2749,26 +2804,26 @@ and the matching block under <code>LLM:</code> in <code>.config.yaml</code>.</p>
 <li>GGUF model files downloaded into <code>/mnt/user/appdata/llama-models/</code> (or your equivalent path).</li>
 </ul>
 <h3 id="start">Start<a class="headerlink" href="#start" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Container: ghcr.io/mostlygeek/llama-swap:cuda</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Config:    /mnt/user/appdata/llama-swap/config.yaml</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>docker<span class="w"> </span>start<span class="w"> </span>llama-swap
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>curl<span class="w"> </span>http://&lt;LLAMA_SWAP_HOST&gt;:8080/health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Container: ghcr.io/mostlygeek/llama-swap:cuda</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Config:    /mnt/user/appdata/llama-swap/config.yaml</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>docker<span class="w"> </span>start<span class="w"> </span>llama-swap
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>curl<span class="w"> </span>http://&lt;LLAMA_SWAP_HOST&gt;:8080/health
 </code></pre></div>
 <p>See <a href="../cookbook/llama-swap-concurrent-models/">cookbook/llama-swap-concurrent-models.md</a> for the matrix-set config that pairs <code>qwen3.5:4b</code> (voice inner loop) with <code>qwen3.6:27b-think</code> (<code>think_hard</code> target).</p>
 <h3 id="configyaml-snippet_1"><code>.config.yaml</code> snippet<a class="headerlink" href="#configyaml-snippet_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">selected_module</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">LLM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenAICompat</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">LLM</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">OpenAICompat</span><span class="p">:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai_compat</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://&lt;LLAMA_SWAP_HOST&gt;:8080/v1</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any-string</span><span class="w">                     </span><span class="c1"># llama-swap ignores</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qwen3.5:4b</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">persona_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">personas/dotty_voice.md</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">max_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">selected_module</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">LLM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenAICompat</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">LLM</span><span class="p">:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">OpenAICompat</span><span class="p">:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai_compat</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://&lt;LLAMA_SWAP_HOST&gt;:8080/v1</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any-string</span><span class="w">                     </span><span class="c1"># llama-swap ignores</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qwen3.5:4b</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nt">persona_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">personas/dotty_voice.md</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">max_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
 </code></pre></div>
 <h3 id="notes_1">Notes<a class="headerlink" href="#notes_1" title="Permanent link">&para;</a></h3>
 <ul>
@@ -2781,23 +2836,23 @@ and the matching block under <code>LLM:</code> in <code>.config.yaml</code>.</p>
 <p>The default in the shipped <code>.config.yaml</code>. A small, fast model (<code>qwen3.5:4b</code> against llama-swap) handles every plain conversational turn without involving the bridge. When the model emits a structured <code>tool_call</code>, the provider escalates to <code>POST /api/voice/escalate</code> and the bridge dispatches the tool (ZeroClaw memory for <code>memory_lookup</code>, <code>qwen3.6:27b-think</code> for <code>think_hard</code>, the VLM for <code>take_photo</code>, or <code>/xiaozhi/admin/play-asset</code> for <code>play_song</code>).</p>
 <p>Smart-mode flips repoint the inner loop at a cloud model (default <code>anthropic/claude-sonnet-4-6</code>) via in-process <code>set_runtime()</code> — no docker restart and no daemon restart.</p>
 <h3 id="configyaml-snippet_2"><code>.config.yaml</code> snippet<a class="headerlink" href="#configyaml-snippet_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">selected_module</span><span class="p">:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">LLM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tier1Slim</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">LLM</span><span class="p">:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">Tier1Slim</span><span class="p">:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tier1_slim</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;LLAMA_SWAP_URL&gt;</span><span class="w">                   </span><span class="c1"># e.g. http://192.168.1.67:8080/v1</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;LLAMA_SWAP_KEY&gt;</span><span class="w">               </span><span class="c1"># any string; llama-swap ignores</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qwen3.5:4b</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nt">persona_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">personas/dotty_voice.md</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">max_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">selected_module</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">LLM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tier1Slim</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">LLM</span><span class="p">:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">Tier1Slim</span><span class="p">:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tier1_slim</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;LLAMA_SWAP_URL&gt;</span><span class="w">                   </span><span class="c1"># e.g. http://192.168.1.67:8080/v1</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;LLAMA_SWAP_KEY&gt;</span><span class="w">               </span><span class="c1"># any string; llama-swap ignores</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qwen3.5:4b</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">persona_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">personas/dotty_voice.md</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nt">max_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
 </code></pre></div>
 <p>Plus environment variables (consumed by the bridge for smart-mode dispatch):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>DOTTY_VOICE_PROVIDER=tier1slim
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>TIER1SLIM_CLOUD_API_KEY=sk-or-...           # required for OFF→ON smart-mode flip
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>DOTTY_VOICE_PROVIDER=tier1slim
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>TIER1SLIM_CLOUD_API_KEY=sk-or-...           # required for OFF→ON smart-mode flip
 </code></pre></div>
 <p>Full reference: <a href="../tier1slim/">tier1slim.md</a>.</p>
 <h3 id="notes_2">Notes<a class="headerlink" href="#notes_2" title="Permanent link">&para;</a></h3>
@@ -2815,18 +2870,18 @@ and the matching block under <code>LLM:</code> in <code>.config.yaml</code>.</p>
 <li>Persona configured in <code>~/.zeroclaw/workspace/</code> (<code>SOUL.md</code>, <code>IDENTITY.md</code>, etc.).</li>
 </ul>
 <h3 id="configyaml-snippet_3"><code>.config.yaml</code> snippet<a class="headerlink" href="#configyaml-snippet_3" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">selected_module</span><span class="p">:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">LLM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZeroClawLLM</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">LLM</span><span class="p">:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">ZeroClawLLM</span><span class="p">:</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zeroclaw</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://&lt;ZEROCLAW_HOST&gt;:8080/api/message/stream</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotty</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">system_prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="no">You are &lt;ROBOT_NAME&gt;, a desktop robot (StackChan body). Begin every reply</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="no">with a single emoji, then speak naturally in 1-3 short TTS-friendly sentences.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">selected_module</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">LLM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ZeroClawLLM</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">LLM</span><span class="p">:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">ZeroClawLLM</span><span class="p">:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zeroclaw</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://&lt;ZEROCLAW_HOST&gt;:8080/api/message/stream</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotty</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="nt">system_prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">      </span><span class="no">You are &lt;ROBOT_NAME&gt;, a desktop robot (StackChan body). Begin every reply</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">      </span><span class="no">with a single emoji, then speak naturally in 1-3 short TTS-friendly sentences.</span>
 </code></pre></div>
 <h3 id="notes_3">Notes<a class="headerlink" href="#notes_3" title="Permanent link">&para;</a></h3>
 <ul>
