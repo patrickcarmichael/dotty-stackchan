@@ -1,0 +1,39 @@
+# compose.gpu.yml — NVIDIA GPU acceleration for the xiaozhi-server container
+#
+# Layered on top of docker-compose.yml when the host has the NVIDIA Container
+# Toolkit installed. Without this override the container runs on CPU, which is
+# fine for FunASR; WhisperLocal at `device: cuda` needs this override or it
+# will fail at model load.
+#
+# Activation:
+#   - `make setup` auto-detects the nvidia runtime and writes
+#         COMPOSE_FILE=docker-compose.yml:compose.gpu.yml
+#     into .env, so all `docker compose ...` invocations pick it up.
+#   - To enable manually:
+#         echo 'COMPOSE_FILE=docker-compose.yml:compose.gpu.yml' >> .env
+#     or pass `-f` on each call:
+#         docker compose -f docker-compose.yml -f compose.gpu.yml up -d
+#
+# Prerequisites:
+#   - NVIDIA driver on the host (`nvidia-smi` works)
+#   - nvidia-container-toolkit installed and `docker info` shows `nvidia` in
+#     the Runtimes list
+#
+# Issue #10: the legacy `runtime: nvidia` line caused `docker compose up`
+# to fail outright on hosts without the toolkit ("unknown or invalid runtime
+# name: nvidia"). Splitting it into this override keeps the base stack
+# CPU-portable.
+
+services:
+  xiaozhi-esp32-server:
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility

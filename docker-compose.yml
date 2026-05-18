@@ -6,20 +6,12 @@ services:
     image: xiaozhi-esp32-server-piper:local
     container_name: xiaozhi-esp32-server
     restart: unless-stopped
-    # GPU access for WhisperLocal ASR (faster-whisper float16 needs CUDA).
-    # Requires nvidia-container-toolkit on the host. Falls back to CPU if the
-    # toolkit is missing — the WhisperLocal config will detect and degrade.
-    runtime: nvidia
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    # GPU access for WhisperLocal ASR (faster-whisper float16 needs CUDA) lives
+    # in the optional `compose.gpu.yml` override. `make setup` auto-enables it
+    # via .env (COMPOSE_FILE=docker-compose.yml:compose.gpu.yml) when the
+    # NVIDIA Container Toolkit is detected. Without it the stack runs CPU-only
+    # (use FunASR — see selected_module.ASR in .config.yaml).
     environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
       # EDIT: set to your local timezone
       - TZ=Australia/Brisbane
       # EDIT: set to the ZeroClaw bridge URL for vision intent handling

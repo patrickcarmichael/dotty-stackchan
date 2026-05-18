@@ -109,6 +109,27 @@ setup: _preflight-compose ## Interactive first-run wizard (prompts for IPs, name
 	   echo "  docker-compose.yml — timezone set to $$TZ_VALUE"; \
 	 fi && \
 	 echo "" && \
+	 echo -e "$(BOLD)Detecting GPU runtime...$(RESET)" && \
+	 if docker info --format '{{json .Runtimes}}' 2>/dev/null | grep -q '"nvidia"'; then \
+	   echo -e "  $(GREEN)NVIDIA Container Toolkit detected — enabling compose.gpu.yml override$(RESET)"; \
+	   touch .env; \
+	   if grep -q '^COMPOSE_FILE=' .env; then \
+	     sed -i 's|^COMPOSE_FILE=.*|COMPOSE_FILE=docker-compose.yml:compose.gpu.yml|' .env; \
+	   else \
+	     echo 'COMPOSE_FILE=docker-compose.yml:compose.gpu.yml' >> .env; \
+	   fi; \
+	 else \
+	   echo -e "  $(YELLOW)No NVIDIA Container Toolkit — running CPU-only.$(RESET)"; \
+	   echo -e "  $(YELLOW)Switching .config.yaml ASR: WhisperLocal -> FunASR (CPU-friendly).$(RESET)"; \
+	   if [ -f .config.yaml ]; then \
+	     sed -i 's|^  ASR: WhisperLocal\b|  ASR: FunASR|' .config.yaml; \
+	   fi; \
+	   if [ -f .env ] && grep -q '^COMPOSE_FILE=.*compose\.gpu\.yml' .env; then \
+	     sed -i '/^COMPOSE_FILE=.*compose\.gpu\.yml/d' .env; \
+	     echo "  Removed stale COMPOSE_FILE override from .env"; \
+	   fi; \
+	 fi && \
+	 echo "" && \
 	 $(MAKE) fetch-models && \
 	 echo "" && \
 	 echo -e "$(BOLD)Starting containers...$(RESET)" && \
@@ -219,6 +240,16 @@ doctor: ## Run health checks on config, models, and services
 	 check "models/SenseVoiceSmall/ has files" "ls $(SENSEVOICE_DIR)/*.pt >/dev/null 2>&1 || ls $(SENSEVOICE_DIR)/*.yaml >/dev/null 2>&1"; \
 	 check "models/piper/*.onnx exists" "ls $(PIPER_DIR)/*.onnx >/dev/null 2>&1"; \
 	 check "docker compose config validates" "docker compose config --quiet"; \
+	 if grep -qE '^\s*ASR:\s*WhisperLocal' .config.yaml 2>/dev/null && \
+	    grep -qE '^\s*device:\s*cuda' .config.yaml 2>/dev/null; then \
+	   if docker info --format '{{json .Runtimes}}' 2>/dev/null | grep -q '"nvidia"'; then \
+	     echo -e "  $(GREEN)PASS$(RESET)  WhisperLocal+cuda has nvidia runtime available"; \
+	     PASS=$$((PASS+1)); \
+	   else \
+	     echo -e "  $(RED)FAIL$(RESET)  WhisperLocal selected with device: cuda but no NVIDIA Container Toolkit (see compose.gpu.yml, or flip ASR to FunASR)"; \
+	     FAIL=$$((FAIL+1)); \
+	   fi; \
+	 fi; \
 	 XIAOZHI_HOST=$$(grep -oP 'ws://\K[0-9.]+' .config.yaml 2>/dev/null | head -1); \
 	 ZEROCLAW_HOST=$$(grep -oP 'url: http://\K[0-9.]+' .config.yaml 2>/dev/null | head -1); \
 	 if [ -n "$$XIAOZHI_HOST" ]; then \

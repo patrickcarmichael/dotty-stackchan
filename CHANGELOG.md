@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-_Nothing yet — `server-v0.1.0` was tagged on 2026-05-17._
+### Changed
+- **GPU bits split out of `docker-compose.yml`** (#10) — `runtime: nvidia`, the `deploy.resources` reservation block, and `NVIDIA_*` env vars now live in a new `compose.gpu.yml` override. The base compose is CPU-portable. `make setup` auto-detects the NVIDIA Container Toolkit via `docker info` and writes `COMPOSE_FILE=docker-compose.yml:compose.gpu.yml` into `.env` when present; on CPU hosts it also flips `selected_module.ASR` from `WhisperLocal` to `FunASR` so the stack comes up without CUDA. `make doctor` flags WhisperLocal+cuda mismatches against the detected runtime.
 
 ## [server-v0.1.0] - 2026-05-17
 
