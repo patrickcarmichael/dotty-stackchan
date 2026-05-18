@@ -12,8 +12,8 @@ services:
     # NVIDIA Container Toolkit is detected. Without it the stack runs CPU-only
     # (use FunASR — see selected_module.ASR in .config.yaml).
     environment:
-      # EDIT: set to your local timezone
-      - TZ=Australia/Brisbane
+      # Timezone (IANA name) — substituted by `make setup` from .wizard.env.
+      - TZ=<TZ>
       # EDIT: set to the ZeroClaw bridge URL for vision intent handling
       - VISION_BRIDGE_URL=http://<ZEROCLAW_HOST>:8080
       # Active persona file under ./personas/ (loaded by ZeroClawLLM provider).

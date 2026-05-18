@@ -18,7 +18,7 @@ BOLD   := \033[1m
 RESET  := \033[0m
 
 # ── Targets ──────────────────────────────────────────────────────────
-.PHONY: help setup fetch-models doctor audit up down logs status voice-list voice-install sbom verify-firmware test lint check _preflight-compose
+.PHONY: help setup regen-config fetch-models doctor audit up down logs status voice-list voice-install sbom verify-firmware test lint check _preflight-compose
 
 # ─────────────────────────────────────────────────────────────────────
 # _preflight-compose — fail fast if Docker Compose v2 plugin is missing
@@ -72,78 +72,17 @@ lint: ## Run ruff lint over the repo
 check: lint test ## Run lint + tests (the CI gate)
 
 # ─────────────────────────────────────────────────────────────────────
-# setup — interactive first-run wizard
+# setup — interactive first-run wizard (idempotent; see scripts/setup-wizard.sh)
+#
+# Issue #11: the wizard now renders gitignored live config files from
+# tracked *.template counterparts using answers persisted in .wizard.env,
+# so re-running it doesn't dirty the working tree.
 # ─────────────────────────────────────────────────────────────────────
-setup: _preflight-compose ## Interactive first-run wizard (prompts for IPs, names, timezone)
-	@echo ""
-	@echo -e "$(BOLD)Dotty setup wizard$(RESET)"
-	@echo "This will substitute placeholders in config files and start the stack."
-	@echo ""
-	@read -rp "XIAOZHI_HOST  (LAN IP of Docker host, e.g. 192.168.1.10): " XIAOZHI_HOST && \
-	 read -rp "ZEROCLAW_HOST     (LAN IP of ZeroClaw host,  e.g. 192.168.1.20): " ZEROCLAW_HOST && \
-	 read -rp "ZEROCLAW_USER   (SSH user on the Pi,       e.g. dietpi):       " ZEROCLAW_USER && \
-	 read -rp "ROBOT_NAME (name the robot calls itself) [Dotty]:          " ROBOT_NAME && \
-	 ROBOT_NAME=$${ROBOT_NAME:-Dotty} && \
-	 read -rp "YOUR_NAME  (your name / org,           e.g. Brett):       " YOUR_NAME && \
-	 read -rp "Timezone   (TZ identifier,             e.g. Australia/Brisbane): " TZ_VALUE && \
-	 echo "" && \
-	 if [ -z "$$XIAOZHI_HOST" ] || [ -z "$$ZEROCLAW_HOST" ] || [ -z "$$ZEROCLAW_USER" ] || \
-	    [ -z "$$ROBOT_NAME" ] || [ -z "$$YOUR_NAME" ] || [ -z "$$TZ_VALUE" ]; then \
-	   echo -e "$(RED)Error: all fields are required.$(RESET)"; exit 1; \
-	 fi && \
-	 echo -e "$(BOLD)Substituting placeholders...$(RESET)" && \
-	 for f in .config.yaml docker-compose.yml zeroclaw-bridge.service; do \
-	   if [ -f "$$f" ]; then \
-	     sed -i "s|<XIAOZHI_HOST>|$$XIAOZHI_HOST|g"   "$$f"; \
-	     sed -i "s|<ZEROCLAW_HOST>|$$ZEROCLAW_HOST|g"         "$$f"; \
-	     sed -i "s|<ZEROCLAW_USER>|$$ZEROCLAW_USER|g"     "$$f"; \
-	     sed -i "s|<ROBOT_NAME>|$$ROBOT_NAME|g; s|You are Dotty,|You are $$ROBOT_NAME,|g" "$$f"; \
-	     sed -i "s|<YOUR_NAME>|$$YOUR_NAME|g"   "$$f"; \
-	     echo "  $$f — done"; \
-	   else \
-	     echo -e "  $(YELLOW)$$f — not found, skipping$(RESET)"; \
-	   fi; \
-	 done && \
-	 if [ -f docker-compose.yml ]; then \
-	   sed -i "s|TZ=.*|TZ=$$TZ_VALUE|g" docker-compose.yml; \
-	   echo "  docker-compose.yml — timezone set to $$TZ_VALUE"; \
-	 fi && \
-	 echo "" && \
-	 echo -e "$(BOLD)Detecting GPU runtime...$(RESET)" && \
-	 if docker info --format '{{json .Runtimes}}' 2>/dev/null | grep -q '"nvidia"'; then \
-	   echo -e "  $(GREEN)NVIDIA Container Toolkit detected — enabling compose.gpu.yml override$(RESET)"; \
-	   touch .env; \
-	   if grep -q '^COMPOSE_FILE=' .env; then \
-	     sed -i 's|^COMPOSE_FILE=.*|COMPOSE_FILE=docker-compose.yml:compose.gpu.yml|' .env; \
-	   else \
-	     echo 'COMPOSE_FILE=docker-compose.yml:compose.gpu.yml' >> .env; \
-	   fi; \
-	 else \
-	   echo -e "  $(YELLOW)No NVIDIA Container Toolkit — running CPU-only.$(RESET)"; \
-	   echo -e "  $(YELLOW)Switching .config.yaml ASR: WhisperLocal -> FunASR (CPU-friendly).$(RESET)"; \
-	   if [ -f .config.yaml ]; then \
-	     sed -i 's|^  ASR: WhisperLocal\b|  ASR: FunASR|' .config.yaml; \
-	   fi; \
-	   if [ -f .env ] && grep -q '^COMPOSE_FILE=.*compose\.gpu\.yml' .env; then \
-	     sed -i '/^COMPOSE_FILE=.*compose\.gpu\.yml/d' .env; \
-	     echo "  Removed stale COMPOSE_FILE override from .env"; \
-	   fi; \
-	 fi && \
-	 echo "" && \
-	 $(MAKE) fetch-models && \
-	 echo "" && \
-	 echo -e "$(BOLD)Starting containers...$(RESET)" && \
-	 docker compose up -d && \
-	 echo "" && \
-	 echo -e "$(GREEN)$(BOLD)Setup complete.$(RESET)" && \
-	 echo "" && \
-	 echo "Next steps:" && \
-	 echo "  1. Flash the StackChan firmware (see SETUP.md or m5stack/StackChan repo)." && \
-	 echo "  2. In the device's Advanced Options, set the OTA URL to:" && \
-	 echo "       http://$$XIAOZHI_HOST:8003/xiaozhi/ota/" && \
-	 echo "  3. Deploy zeroclaw-bridge.service to the ZeroClaw host and start it." && \
-	 echo "  4. Run 'make doctor' to verify everything is healthy." && \
-	 echo ""
+setup: _preflight-compose ## Interactive first-run/re-run wizard (prompts use saved answers as defaults)
+	@./scripts/setup-wizard.sh
+
+regen-config: ## Re-render live configs from templates + .wizard.env (no prompts)
+	@./scripts/setup-wizard.sh --regen-only
 
 # ─────────────────────────────────────────────────────────────────────
 # fetch-models — download ASR + TTS model files

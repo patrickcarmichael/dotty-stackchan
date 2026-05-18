@@ -41,3 +41,19 @@ htmlcov/
 # to regenerate bridge/static/tailwind.min.css.
 node_modules/
 package-lock.json
+
+# Setup-wizard generated files (issue #11). The tracked `.template`
+# counterparts are the source of truth; `make setup` renders these by
+# substituting answers from .wizard.env. Edit the templates if you want
+# changes that persist across regen; the live files are disposable.
+/.config.yaml
+/docker-compose.yml
+/zeroclaw-bridge.service
+/.wizard.env
+/.config.yaml.bak.*
+/docker-compose.yml.bak.*
+/zeroclaw-bridge.service.bak.*
+
+# Runtime / downloaded artifacts
+/models/
+/tmp/

@@ -4,7 +4,7 @@ server:
   http_port: 8003
   websocket: ws://<XIAOZHI_HOST>:8000/xiaozhi/v1/
   vision_explain: http://<ZEROCLAW_HOST>:8080/api/vision/explain
-  timezone_offset: +10
+  timezone_offset: <TIMEZONE_OFFSET>
 
 log:
   log_level: INFO
@@ -13,8 +13,12 @@ delete_audio: true
 
 selected_module:
   VAD: SileroVAD
-  ASR: WhisperLocal
-  # ASR: FunASR           # <-- swap back to FunASR (CPU, lower recall on kid speech)
+  # ASR is auto-selected by `make setup` based on the detected Docker
+  # runtime: WhisperLocal on GPU hosts (faster-whisper float16 via
+  # compose.gpu.yml), FunASR on CPU hosts (lower recall on kid speech but
+  # no CUDA needed). Edit the template to override the default; re-running
+  # setup picks the value based on the runtime.
+  ASR: <ASR_PROVIDER>
   LLM: Tier1Slim
   # LLM: ZeroClawLLM       # <-- legacy: voice via ZeroClaw ACP (24K-token tax per turn)
   # LLM: OpenAICompat      # <-- switch to direct OpenAI-compatible LLM
@@ -26,7 +30,7 @@ selected_module:
 # Replace "Dotty" with whatever you want the robot to call itself.
 # The hardware is a StackChan; the persona can be anything.
 prompt: |
-  You are Dotty, a small desktop robot assistant built on StackChan hardware.
+  You are <ROBOT_NAME>, a small desktop robot assistant built on StackChan hardware.
   You speak through a small speaker with a cartoon face that shows your expression.
   Stay cheerful, curious, and helpful.
 
